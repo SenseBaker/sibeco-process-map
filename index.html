@@ -1,0 +1,986 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Карта входящего обращения SIBECO</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap">
+<style>
+:root{
+  color-scheme: light;
+  --bg:#F4F6F3; --surface:#FFFFFF; --surface-2:#EAEFEA; --ink:#1A1F1B; --muted:#5D665F;
+  --line:#D3DAD3; --line-strong:#A3AEA5; --known:#6F7D72; --wire:#95A197; --p1:#2E8B57; --p1-soft:#DDEFE6; --p2:#3467C4; --p2-soft:#DCE6F7;
+  --trunk:#1E6A84; --trunk-soft:#DCEBF1;
+  --s1:#2E7D5B; --s1-soft:#DDEFE6;
+  --s2:#B5452E; --s2-soft:#F6E1DB;
+  --s3:#3B69AE; --s3-soft:#DFE7F5;
+  --s4:#7856A5; --s4-soft:#EAE2F4;
+  --s5:#A6770F; --s5-soft:#F6EBD0;
+  --q-bg:#D0382A; --q-fg:#FFFFFF;
+  --h-bg:#E9B63F; --h-fg:#7A150B;
+  --p-bg:#3C5A6E; --p-fg:#FFFFFF; --s-bg:#1F3A2E; --s-fg:#F5C842; --cy-bg:#2F6F9F; --cy-fg:#FFFFFF;
+  --ok:#256B4C; --ok-soft:#DDEFE6;
+  --warn:#83600B; --warn-soft:#F6EBD0;
+  --tip-bg:#1A1F1B; --tip-fg:#F4F6F3;
+  --focus:#1E6A84;
+  --shadow:0 1px 2px rgba(20,30,25,.06), 0 10px 30px rgba(20,30,25,.10);
+  --radius:10px;
+  --font-display:"Manrope","Segoe UI",system-ui,sans-serif;
+  --font-body:"IBM Plex Sans","Segoe UI",system-ui,sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme: dark;
+    --bg:#131614; --surface:#1C211E; --surface-2:#252B27; --ink:#E8ECE7; --muted:#A4ADA6;
+    --line:#2E3531; --line-strong:#56625A; --known:#8A978D; --wire:#5E6A62; --p1:#6FCF97; --p1-soft:#1B2E25; --p2:#7FB3D9; --p2-soft:#17283A;
+    --trunk:#6FB3CC; --trunk-soft:#1C2E36;
+    --s1:#6CC29A; --s1-soft:#1B2E25;
+    --s2:#E58A73; --s2-soft:#3A221C;
+    --s3:#8FB0E8; --s3-soft:#1E2838;
+    --s4:#B79CE0; --s4-soft:#2A2236;
+    --s5:#E0B54B; --s5-soft:#352C15;
+    --q-bg:#E2483A; --q-fg:#FFFFFF;
+    --h-bg:#E3B03C; --h-fg:#6E120A;
+    --p-bg:#9CC1D4; --p-fg:#10181C; --s-bg:#2A4A3A; --s-fg:#F7CF52; --cy-bg:#7FB3D9; --cy-fg:#0F1A22;
+    --ok:#7ACFA6; --ok-soft:#1B2E25;
+    --warn:#E6BE5A; --warn-soft:#352C15;
+    --tip-bg:#E8ECE7; --tip-fg:#131614;
+    --focus:#6FB3CC;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 30px rgba(0,0,0,.35);
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme: dark;
+  --bg:#131614; --surface:#1C211E; --surface-2:#252B27; --ink:#E8ECE7; --muted:#A4ADA6;
+  --line:#2E3531; --line-strong:#56625A; --known:#8A978D; --wire:#5E6A62; --p1:#6FCF97; --p1-soft:#1B2E25; --p2:#7FB3D9; --p2-soft:#17283A;
+  --trunk:#6FB3CC; --trunk-soft:#1C2E36;
+  --s1:#6CC29A; --s1-soft:#1B2E25;
+  --s2:#E58A73; --s2-soft:#3A221C;
+  --s3:#8FB0E8; --s3-soft:#1E2838;
+  --s4:#B79CE0; --s4-soft:#2A2236;
+  --s5:#E0B54B; --s5-soft:#352C15;
+  --q-bg:#E2483A; --q-fg:#FFFFFF;
+  --h-bg:#E3B03C; --h-fg:#6E120A;
+  --p-bg:#9CC1D4; --p-fg:#10181C; --s-bg:#2A4A3A; --s-fg:#F7CF52; --cy-bg:#7FB3D9; --cy-fg:#0F1A22;
+  --ok:#7ACFA6; --ok-soft:#1B2E25;
+  --warn:#E6BE5A; --warn-soft:#352C15;
+  --tip-bg:#E8ECE7; --tip-fg:#131614;
+  --focus:#6FB3CC;
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 30px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box}
+[hidden]{display:none !important}
+html,body{margin:0}
+body{
+  background:var(--bg); color:var(--ink); font-family:var(--font-body); font-size:14px; line-height:1.45;
+  padding-inline:16px; padding-block:0 48px;
+}
+.wrap{max-width:1680px; margin:0 auto}
+h1,h2{font-family:var(--font-display); margin:0; text-wrap:balance}
+button{font:inherit; color:inherit}
+:focus-visible{outline:2px solid var(--focus); outline-offset:2px}
+
+/* header */
+.top{display:flex; flex-wrap:wrap; gap:14px 28px; align-items:center; justify-content:space-between; padding-block:24px 22px}
+.top h1{font-size:26px; font-weight:800; letter-spacing:-.01em}
+.theme{display:inline-flex; align-items:center; gap:10px; color:var(--muted); font-size:12px; font-family:var(--font-display); font-weight:600}
+.seg{display:inline-flex; border:1px solid var(--line-strong); border-radius:9px; overflow:hidden; background:var(--surface)}
+.seg button{border:0; background:transparent; padding:7px 12px; cursor:pointer; font-family:var(--font-display); font-weight:600; font-size:13px; color:var(--muted)}
+.seg button + button{border-left:1px solid var(--line)}
+.seg button[aria-pressed="true"]{background:var(--trunk-soft); color:var(--ink)}
+
+/* sticky bar: filters, sources, legend */
+.bar{position:sticky; top:env(safe-area-inset-top,0px); z-index:5; background:var(--bg); border-bottom:1px solid var(--line)}
+.controls{display:flex; flex-wrap:wrap; gap:8px 6px; align-items:center; padding-block:10px}
+.chip{
+  border:1px solid var(--line-strong); background:var(--surface); border-radius:999px; padding:6px 7px; cursor:pointer;
+  font-family:var(--font-display); font-weight:600; font-size:12.5px; display:inline-flex; align-items:center; gap:6px;
+}
+.chip .dot{width:10px; height:10px; border-radius:50%; background:var(--c, var(--trunk))}
+.chip[aria-pressed="true"]{background:var(--c-soft, var(--trunk-soft)); border-color:var(--c, var(--trunk))}
+.sources{margin-left:auto; padding-left:18px; display:flex; flex-wrap:wrap; gap:6px 3px; align-items:center}
+.sources .lab{color:var(--muted); font-family:var(--font-display); font-weight:700; font-size:10.5px; letter-spacing:.02em; text-transform:uppercase; margin-right:3px}
+.badge{
+  display:inline-block; font-size:11px; line-height:1; padding:4px 6px; border-radius:6px; border:1px solid var(--line-strong);
+  color:var(--ink); background:var(--surface-2); font-family:var(--font-display); font-weight:600; white-space:nowrap;
+}
+.badge.a{border-style:dashed; background:transparent; color:var(--muted)}
+.legend-btn{
+  border:1px solid var(--line-strong); background:var(--surface); border-radius:8px; padding:7px 10px; cursor:pointer; margin-right:18px;
+  font-family:var(--font-display); font-weight:600; font-size:12.5px; display:inline-flex; gap:6px; align-items:center;
+}
+.legend-btn .chev{display:inline-block; transition:transform .2s ease}
+.legend-btn[aria-expanded="true"]{background:var(--trunk-soft); border-color:var(--trunk)}
+.legend-btn[aria-expanded="true"] .chev{transform:rotate(180deg)}
+.legend{
+  display:flex; flex-wrap:wrap; gap:10px 28px; align-items:center; margin:8px 0 16px; padding:12px 16px;
+  background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); font-size:13px; --card-bg:var(--surface);
+}
+.legend .item{display:inline-flex; align-items:center; gap:10px}
+.sample{width:34px; height:20px; border-radius:6px; background:var(--surface); border:2px solid var(--known); flex:none}
+
+/* info icons */
+.icons{display:inline-flex; align-items:center; flex:none}
+.ic{
+  width:26px; height:26px; border-radius:50%; display:inline-grid; place-items:center; flex:none;
+  box-shadow:0 0 0 2px var(--card-bg, var(--bg));
+}
+.ic + .ic{margin-left:-6px}
+.ic svg{display:block}
+.ic.q{background:var(--q-bg); color:var(--q-fg)}
+.ic.q svg{width:18px; height:18px}
+.ic.h{background:var(--h-bg); color:var(--h-fg)}
+.ic.h svg{width:18px; height:18px}
+.ic.p{background:var(--p-bg); color:var(--p-fg)}
+.ic.p svg{width:17px; height:17px}
+.ic.s{background:var(--s-bg); color:var(--s-fg)}
+.ic.s svg{width:17px; height:17px}
+.ic.c{background:var(--cy-bg); color:var(--cy-fg)}
+.ic.c svg{width:18px; height:18px}
+.ic.sm{width:20px; height:20px}
+.ic.sm svg{width:14px; height:14px}
+.icons .ic, .crit .ic{cursor:help}
+.icons .ic.hit{cursor:pointer; transition:box-shadow .12s ease, transform .12s ease}
+.icons .ic.hit:hover{box-shadow:0 0 0 2px var(--card-bg, var(--bg)), 0 0 0 4px var(--s-fg); transform:scale(1.08)}
+.pop{position:fixed; z-index:41; width:min(380px, calc(100vw - 16px)); padding:12px 36px 12px 14px; border-radius:10px;
+  background:var(--surface); color:var(--ink); border:1.5px solid var(--line-strong); box-shadow:var(--shadow)}
+.pop .ph{display:flex; align-items:center; gap:8px; margin-bottom:6px; font-family:var(--font-display); font-weight:700; font-size:11.5px; letter-spacing:.05em; text-transform:uppercase; color:var(--muted)}
+.pop .ph .ic{box-shadow:none}
+.pop .pt{margin:0; font-size:13.5px; line-height:1.45}
+.pop .pc{position:absolute; top:6px; right:6px; width:26px; height:26px; border:0; border-radius:6px; background:transparent; color:var(--muted); font-size:18px; line-height:1; cursor:pointer}
+.pop .pc:hover{background:var(--surface-2)}
+.tip{
+  position:fixed; z-index:40; max-width:320px; padding:6px 10px; border-radius:7px; pointer-events:none;
+  background:var(--tip-bg); color:var(--tip-fg); font-size:12.5px; line-height:1.35; box-shadow:var(--shadow);
+}
+
+/* map */
+.map{position:relative; padding-block:46px 12px}
+.wires{position:absolute; left:0; top:0; pointer-events:none; z-index:0; overflow:visible}
+.wire{fill:none; stroke:var(--wire); stroke-width:2; transition:opacity .2s ease}
+.wire.dim{opacity:.15}
+.arrow{fill:var(--wire)}
+.wire.p1{stroke:var(--p1)} .wire.p2{stroke:var(--p2)} .arrow.p1{fill:var(--p1)} .arrow.p2{fill:var(--p2)}
+.pathlabel.p1{background:var(--p1-soft); border-color:var(--p1)} .pathlabel.p1 .pl{background:var(--p1)}
+.pathlabel.p2{background:var(--p2-soft); border-color:var(--p2)} .pathlabel.p2 .pl{background:var(--p2)}
+
+.lane{position:relative; z-index:1; max-width:560px; margin:0 auto; display:flex; flex-direction:column; gap:24px; --c:var(--trunk); --c-soft:var(--trunk-soft)}
+.branches{
+  position:relative; z-index:1; display:grid; grid-template-columns:repeat(5, minmax(0,1fr));
+  gap:30px 44px; padding-inline:22px; align-items:start; margin-block:62px;
+}
+.branch{display:flex; flex-direction:column; gap:24px; --c:var(--trunk); --c-soft:var(--trunk-soft); transition:opacity .2s ease}
+.branch.dim{opacity:.28}
+
+.bhead{position:relative; z-index:1; background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:12px 14px; display:grid; gap:6px}
+.bhead .row{display:flex; align-items:center; gap:10px}
+.bhead .pill{
+  background:var(--c); color:var(--surface); border-radius:8px; min-width:28px; height:28px; display:inline-grid; place-items:center;
+  font-family:var(--font-display); font-weight:800; font-size:14px;
+}
+.bhead h2{font-size:16px; font-weight:800}
+.bhead .range{color:var(--muted); font-size:12.5px}
+
+.pathlabel{
+  position:relative; z-index:1; align-self:center; max-width:100%; display:inline-flex; align-items:center; gap:8px;
+  background:var(--c-soft); border:1px solid var(--c); border-radius:999px; padding:4px 12px 4px 4px;
+  font-family:var(--font-display); font-weight:700; font-size:12px; line-height:1.25;
+}
+.pathlabel .pl{
+  flex:none; width:20px; height:20px; border-radius:50%; background:var(--c); color:var(--surface);
+  display:grid; place-items:center; font-size:11.5px; font-weight:800;
+}
+
+/* step cards */
+.step{
+  position:relative; z-index:1; display:grid; gap:5px; width:100%; text-align:left; cursor:pointer;
+  --card-bg:var(--surface); background:var(--card-bg); border:2px solid var(--known); border-radius:var(--radius); padding:11px 13px;
+  transition:border-color .15s ease, box-shadow .15s ease;
+}
+.step.assume{--card-bg:var(--bg); border:1.5px dashed var(--line-strong); padding:11.5px 13.5px}
+.step.p1{border-color:var(--p1)} .step.p2{border-color:var(--p2)}
+.step:hover{border-color:var(--c); box-shadow:var(--shadow)}
+.step.is-open{border-color:var(--c); box-shadow:0 0 0 3px var(--c-soft)}
+.step .head{display:flex; align-items:center; justify-content:space-between; gap:8px; min-height:26px}
+.step .num{color:var(--c); font-family:var(--font-display); font-weight:800; font-size:12px; letter-spacing:.05em; font-variant-numeric:tabular-nums}
+.step .ttl{font-family:var(--font-display); font-weight:700; font-size:15px; line-height:1.25}
+.meta{font-size:12px; line-height:1.35; color:var(--ink)}
+.why{font-size:13px; line-height:1.4; color:var(--ink)}
+.meta b, .why b{font-weight:600; color:var(--muted)}
+.step .badges{display:flex; flex-wrap:wrap; gap:4px; margin-top:2px}
+.step.jump{--card-bg:var(--surface-2); border-style:solid}
+.step .jumpto{font-family:var(--font-display); font-weight:700; font-size:12px; color:var(--s1)}
+
+.foot{color:var(--muted); font-size:12.5px; max-width:80ch; margin:18px auto 0; text-align:center}
+
+/* drawer */
+.scrim{position:fixed; inset:0; background:rgba(10,14,12,.35); opacity:0; pointer-events:none; transition:opacity .2s ease; z-index:19}
+.scrim.on{opacity:1; pointer-events:auto}
+.drawer{
+  position:fixed; top:0; right:0; height:100%; width:min(480px,100%); background:var(--surface); box-shadow:var(--shadow);
+  transform:translateX(102%); visibility:hidden; transition:transform .22s ease, visibility 0s linear .22s; z-index:20; overflow:auto;
+  padding:18px 20px calc(24px + env(safe-area-inset-bottom,0px)); display:grid; gap:16px; align-content:start;
+  --c:var(--trunk); --c-soft:var(--trunk-soft); --card-bg:var(--surface);
+}
+.drawer.open{transform:translateX(0); visibility:visible; transition-delay:0s}
+.drawer .eyebrow{display:flex; align-items:center; justify-content:space-between; gap:10px}
+.drawer .scen{font-family:var(--font-display); font-weight:700; font-size:12px; letter-spacing:.05em; text-transform:uppercase; color:var(--c)}
+.drawer .close{border:1px solid var(--line-strong); background:var(--surface); border-radius:8px; width:34px; height:34px; cursor:pointer; font-size:18px; line-height:1}
+.drawer h2{font-size:20px; font-weight:800; line-height:1.2}
+.drawer .status{display:grid; gap:8px}
+.drawer .status div{display:flex; align-items:center; gap:10px; font-size:13px; font-weight:600}
+.drawer .sec{display:grid; gap:6px}
+.drawer .sec .lab{font-family:var(--font-display); font-weight:700; font-size:11px; letter-spacing:.06em; text-transform:uppercase; color:var(--muted)}
+.drawer .val{margin:0; font-size:13.5px; max-width:62ch}
+.drawer .list{padding-left:18px; display:grid; gap:3px}
+.drawer .extra{margin-top:10px; padding-top:22px; border-top:2px solid var(--line-strong); display:grid; gap:16px}
+.drawer .src{display:grid; gap:6px}
+.drawer .src div{display:flex; gap:8px; align-items:flex-start; font-size:13.5px}
+.drawer .src .badge{flex:none; margin-top:2px}
+.drawer .assume{border:1.5px dashed var(--line-strong); border-radius:8px; padding:10px 12px}
+.drawer .clarify{background:var(--surface-2); border-radius:8px; padding:10px 12px}
+.drawer .nav{display:flex; gap:8px; justify-content:space-between; margin-top:4px}
+.drawer .nav button{border:1px solid var(--line-strong); background:var(--surface); border-radius:8px; padding:8px 12px; cursor:pointer; font-family:var(--font-display); font-weight:600; font-size:13px}
+.drawer .nav button:disabled{opacity:.4; cursor:default}
+
+/* sorting criteria */
+.crit{list-style:none; margin:0; padding:0; display:grid; gap:8px; counter-reset:crit}
+.crit li{border:1px solid var(--line); border-radius:8px; padding:10px 12px; display:grid; gap:5px; counter-increment:crit}
+.crit .ch{display:flex; align-items:flex-start; justify-content:space-between; gap:10px}
+.crit .cn{font-family:var(--font-display); font-weight:700; font-size:13.5px; line-height:1.3}
+.crit .cn::before{content:counter(crit) ". "; color:var(--c)}
+.crit .cd{font-size:13px}
+.crit .how{font-size:12.5px; color:var(--muted)}
+.crit .how b{font-weight:600; color:var(--ink)}
+.crit .cs{display:flex; flex-wrap:wrap; gap:4px; align-items:center; --card-bg:var(--surface)}
+.auto{flex:none; font-family:var(--font-display); font-weight:700; font-size:11px; line-height:1; padding:5px 8px; border-radius:999px; white-space:nowrap}
+.auto.yes{background:var(--ok-soft); color:var(--ok)}
+.auto.check{background:var(--warn-soft); color:var(--warn)}
+.auto.human{background:var(--surface-2); color:var(--muted)}
+
+@media (max-width:1120px){
+  .branches{grid-template-columns:repeat(2, minmax(0,1fr)); margin-block:40px}
+  .lane{max-width:640px}
+}
+@media (max-width:720px){
+  .branches{grid-template-columns:1fr}
+  .top h1{font-size:22px}
+  .sources{margin-left:0}
+  .drawer{top:auto; bottom:0; height:auto; max-height:82vh; width:100%; border-radius:16px 16px 0 0; transform:translateY(102%)}
+  .drawer.open{transform:translateY(0)}
+}
+@media (prefers-reduced-motion: reduce){
+  .step,.branch,.drawer,.scrim,.wire,.legend-btn .chev{transition:none}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <h1>Карта входящего обращения компании SIBECO</h1>
+    <div class="theme">Тема
+      <div class="seg" id="theme" role="group" aria-label="Тема оформления">
+        <button type="button" data-t="auto" aria-pressed="true">Авто</button>
+        <button type="button" data-t="light" aria-pressed="false">Светлая</button>
+        <button type="button" data-t="dark" aria-pressed="false">Тёмная</button>
+      </div>
+    </div>
+  </header>
+
+  <div class="bar">
+    <div class="controls" id="controls">
+      <button class="legend-btn" id="legendBtn" type="button" aria-expanded="true" aria-controls="legend">Обозначения <span class="chev" aria-hidden="true">▾</span></button>
+      <button class="chip" data-s="all" aria-pressed="true"><span class="dot"></span>Все ветви</button>
+      <button class="chip" data-s="s1" style="--c:var(--s1);--c-soft:var(--s1-soft)" aria-pressed="false"><span class="dot"></span>1 Заказ</button>
+      <button class="chip" data-s="s2" style="--c:var(--s2);--c-soft:var(--s2-soft)" aria-pressed="false"><span class="dot"></span>2 Претензия</button>
+      <button class="chip" data-s="s3" style="--c:var(--s3);--c-soft:var(--s3-soft)" aria-pressed="false"><span class="dot"></span>3 Информация</button>
+      <button class="chip" data-s="s4" style="--c:var(--s4);--c-soft:var(--s4-soft)" aria-pressed="false"><span class="dot"></span>4 Разработка</button>
+      <button class="chip" data-s="s5" style="--c:var(--s5);--c-soft:var(--s5-soft)" aria-pressed="false"><span class="dot"></span>5 Обратная связь</button>
+      <div class="sources" id="sources"></div>
+    </div>
+    <div class="legend" id="legend"></div>
+  </div>
+
+  <main class="map" id="map">
+    <svg class="wires" id="wires" aria-hidden="true"></svg>
+    <section class="lane" id="trunk" aria-label="Общие шаги в начале"></section>
+    <section class="branches" id="branches" aria-label="Ветви по сценариям"></section>
+    <section class="lane" id="tail" aria-label="Общие шаги в конце"></section>
+    <p class="foot">Длительности шагов не указаны намеренно: их нужно замерять в компании, а не предполагать. Всё, что помечено знаком вопроса, входит в список для уточнения.</p>
+  </main>
+</div>
+
+<div class="tip" id="tip" role="tooltip" hidden></div>
+<div class="pop" id="pop" role="dialog" aria-labelledby="popTitle" hidden>
+  <div class="ph" id="popTitle"></div>
+  <p class="pt" id="popText"></p>
+  <button class="pc" id="popClose" type="button" aria-label="Закрыть">×</button>
+</div>
+
+<div class="scrim" id="scrim"></div>
+<aside class="drawer" id="drawer" aria-label="Детали шага" aria-hidden="true">
+  <div class="eyebrow"><span class="scen" id="dScen"></span><button class="close" id="dClose" type="button" aria-label="Закрыть">×</button></div>
+  <h2 id="dTitle"></h2>
+  <div class="status" id="dStatus"></div>
+  <div class="sec" id="dWhoWrap"><div class="lab" id="dWhoLab"></div><div class="val" id="dWho"></div></div>
+  <div class="sec"><div class="lab">Зачем</div><p class="val" id="dWhy"></p></div>
+  <div class="sec"><div class="lab">Что делается</div><p class="val" id="dText"></p><ul class="val list" id="dList" hidden></ul></div>
+  <div class="sec" id="dResWrap"><div class="lab">Результат</div><p class="val" id="dRes"></p></div>
+  <div class="sec" id="dAiWrap"><div class="lab">Почему здесь поможет ИИ</div><p class="val" id="dAi"></p></div>
+  <div class="sec" id="dSrcWrap"><div class="lab">Откуда взято</div><div class="src" id="dSrc"></div></div>
+  <div class="sec" id="dAssumeWrap"><div class="lab">Предположение</div><div class="val assume" id="dAssume"></div></div>
+  <div class="sec" id="dClarifyWrap"><div class="lab">Что уточнить</div><div class="val clarify" id="dClarify"></div></div>
+  <div class="extra" id="dExtra" hidden>
+    <div class="sec" id="dCritWrap"><div class="lab">Критерии сортировки</div><p class="val" id="dCritIntro"></p><ol class="crit" id="dCrit"></ol></div>
+  </div>
+  <div class="nav"><button type="button" id="dPrev">← Предыдущий</button><button type="button" id="dNext">Следующий →</button></div>
+</aside>
+
+<script>
+(function(){
+  /* icons: «?» drawn for this page; hammer and sickle — Wikimedia Commons "Hammer and sickle.svg", public domain;
+     person — Material Design Icons "account", Apache 2.0 */
+  const Q_SVG = '<svg viewBox="0 0 24 24"><path d="M9.2 9.3a2.9 2.9 0 1 1 4.1 2.6c-.9.45-1.3 1.05-1.3 2v.3" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/><circle cx="12" cy="18.2" r="1.5" fill="currentColor"/></svg>';
+  const HS_SVG = '<svg viewBox="-10.2 833.8 532.5 532.5"><g fill="currentColor"><path d="m 157.54301,922.36336 -16.97149,16.9707 -45.256019,45.2539 -56.570993,56.57034 62.227502,62.2246 56.571,-56.5684 299.82842,299.8124 a 32.001491,31.999993 0 0 0 45.25601,0 32.001491,31.999993 0 0 0 0,-45.2539 l -299.82646,-299.8143 16.9715,-16.97074 50.91448,-50.91015 z"/><path d="m 255.989,844.0001 c 0,0 168.00781,127.99997 168.00783,256 C 423.99684,1164 367.99425,1236 271.98975,1236 c -64.00296,0 -104.24119,-47.7637 -104.24119,-47.7637 l -11.31302,11.3125 a 16.000745,15.999996 0 0 0 -22.62801,0 16.000745,15.999996 0 0 0 -2.47863,3.2227 32.001491,31.999993 0 0 0 -31.464359,8.0918 32.001491,31.999993 0 0 0 -9.330512,21.5449 C 65.101725,1246.1605 22.969246,1272.9834 4.2643862,1308 l 0.029298,0.029 A 32.001491,31.999993 0 0 0 4.2643862,1340 32.001491,31.999993 0 0 0 47.979313,1351.7129 c 35.025561,-18.708 61.854737,-60.8518 75.605087,-86.2813 a 32.001491,31.999993 0 0 0 21.53616,-9.3144 32.001491,31.999993 0 0 0 7.93201,-13.2012 c 24.51647,23.0544 71.44493,57.084 134.93792,57.084 96.00451,0 200.00932,-72 200.00932,-199.9999 0,-160.00002 -232.01081,-256 -232.01081,-256 z"/></g></svg>';
+  const P_SVG = '<svg viewBox="0 0 24 24"><path fill="currentColor" d="M12 4a4 4 0 0 1 4 4a4 4 0 0 1-4 4a4 4 0 0 1-4-4a4 4 0 0 1 4-4m0 10c4.42 0 8 1.79 8 4v2H4v-2c0-2.21 3.58-4 8-4"/></svg>';
+  const S_SVG = '<svg viewBox="0 0 24 24"><path fill="currentColor" d="M12 2.5l2.95 6.3 6.9.75-5.1 4.7 1.4 6.85L12 17.6l-6.15 3.5 1.4-6.85-5.1-4.7 6.9-.75z"/></svg>';
+  const C_SVG = '<svg viewBox="0 0 24 24"><path fill="currentColor" d="M12 6v3l4-4-4-4v3c-4.42 0-8 3.58-8 8 0 1.57.46 3.03 1.24 4.26L6.7 14.8A5.87 5.87 0 0 1 6 12c0-3.31 2.69-6 6-6zm6.76 1.74L17.3 9.2c.44.84.7 1.79.7 2.8 0 3.31-2.69 6-6 6v-3l-4 4 4 4v-3c4.42 0 8-3.58 8-8 0-1.57-.46-3.03-1.24-4.26z"/></svg>';
+  const TIP_Q = 'Предположение';
+  const TIP_H = 'Трудоёмкий процесс';
+  const TIP_P = 'Выполняет человек';
+  const TIP_S = 'Кандидат на автоматизацию';
+  const TIP_S_HIT = 'Кандидат на автоматизацию: нажмите, чтобы узнать почему';
+  const TIP_C = 'Циклическая работа внутри шага';
+  const TIP_QC = 'Предположение';
+  const icon = (cls, svg, label, tip) => `<span class="ic ${cls}" role="img" aria-label="${label}"${tip ? ` data-tip="${label}"` : ''}>${svg}</span>`;
+  const icQ = tip => icon('q', Q_SVG, TIP_Q, tip);
+  const icH = tip => icon('h', HS_SVG, TIP_H, tip);
+  const icP = tip => icon('p', P_SVG, TIP_P, tip);
+  const icS = tip => icon('s', S_SVG, TIP_S, tip);
+  const icSHit = icon('s hit', S_SVG, TIP_S_HIT, true);
+  const icC = tip => icon('c', C_SVG, TIP_C, tip);
+  const icQc = icon('q sm', Q_SVG, TIP_QC, true);
+
+  /* sources of information; «Предположим» is shown only in the top row as the key to dashed cards */
+  const SRC = {
+    c:{label:'Договор', text:'Типовой договор поставки с сайта SIBECO (2020)'},
+    g:{label:'Руководство', text:'Руководство по качеству поставок для поставщиков SIBECO'},
+    s:{label:'Сайт', text:'Страницы sibeco.net: каталог, контакты, документы, формы'},
+    r:{label:'Отзывы', text:'Публичные отзывы клиентов и сотрудников'},
+    a:{label:'Предположим', text:''}
+  };
+  const badge = k => `<span class="badge ${k === 'a' ? 'a' : ''}">${SRC[k].label}</span>`;
+  const AUTO = {yes:'Автоматически', check:'С проверкой человека', human:'Решает человек'};
+
+  const SCEN = {
+    trunk:{name:'Общие шаги'},
+    s1:{n:'1', name:'Заказ', range:'от заявки до отгрузки'},
+    s2:{n:'2', name:'Претензия', range:'от письма до отгрузки замены или мотивированного ответа'},
+    s3:{n:'3', name:'Информация', range:'от запроса до ответа с документами'},
+    s4:{n:'4', name:'Разработка', range:'от запроса до предложения и образца, дальше сценарий 1'},
+    s5:{n:'5', name:'Обратная связь', range:'от письма или звонка до ответа и принятых мер'},
+    tail:{name:'Общие шаги'}
+  };
+
+  /* Card: who does it, why the step exists, result. Panel: what exactly is done, with the rules from documents.
+     src — only real sources; a step without sources is an assumed step. tech — the step happens without a person's action. */
+  const STEPS = [
+    {id:'t1', lane:'trunk', num:'Шаг 1', title:'Фиксация обращения', tech:true, whoLabel:'Получатель', who:'менеджер, общий e-mail, отдел качества',
+     why:'Фиксируются ключевые данные. С этого момента идут договорные сроки.',
+     text:'Текст письма или формы сайта берётся как есть, звонок расшифровывается в текст. Из текста извлекаются и раскладываются по форме ключевые данные:',
+     list:['дата и время поступления','канал: e-mail, форма сайта или звонок','кто обратился: компания, контактное лицо, e-mail и телефон','тема и содержание обращения','вложения: документы, фото, акты'],
+     result:'зафиксированы дата, время, клиент и содержание обращения',
+     src:['s','c'],
+     assume:'Предположим, что единого входа нет: обращения попадают в разные адреса и к разным людям, а звонок записывает тот, кто его принял.',
+     clarify:'Куда на самом деле пишут заводы и мелкие покупатели. Ведётся ли журнал входящих.'},
+    {id:'t2', lane:'trunk', num:'Шаг 2', title:'Чтение и сортировка', who:'получатель обращения', star:true,
+     ai:'При большом потоке входящих нужен быстрый разбор и, как минимум, выделение срочных обращений: проблемы с безопасностью, возможные массовые дефекты, риск упущенной прибыли. ИИ читает письмо и вложения и раскладывает обращение по критериям сортировки, человек подтверждает сомнительные случаи.',
+     why:'Направить обращение на свой путь и к нужному человеку, срочное не ждёт в общей очереди.',
+     cardCrit:'кто пишет, о чём, какое изделие или заказ, что приложено, срочность и договорные обязательства, первый приоритет.',
+     text:'Получатель читает обращение и определяет его по критериям сортировки ниже. От них зависят путь обращения, срок ответа и исполнитель. Это один из главных кандидатов на автоматизацию: большую часть параметров можно извлекать из письма и вложений, а человек подтверждает сомнительные случаи.',
+     critIntro:'У каждого критерия отмечено, можно ли определять его автоматически. Критерии с источником взяты из типового договора поставки, руководства по качеству поставок для поставщиков и сайта компании, критерии со знаком вопроса предложены по здравому смыслу.',
+     criteria:[
+       {name:'Кто пишет', auto:'yes', src:['s'],
+        text:'Клиент из базы или новый. Группа: завод-производитель, зарубежный покупатель, снабженческая организация, эксплуатант или мелкий покупатель. Письма не от клиентов, например от поставщиков, перевозчиков и соискателей, уходят по назначению.',
+        how:'по адресу отправителя, подписи и ИНН со сверкой по базе клиентов'},
+       {name:'О чём обращение', auto:'check', src:['c','s'],
+        text:'Путь: заказ, претензия, информация, разработка или обратная связь. Для претензии ещё и вид: брак или недостача при приёмке либо дефект в гарантийный срок.',
+        how:'система предлагает путь по тексту письма; сомнительные случаи выделяются отдельно и присылаются на подтверждение человеку (чат или e-mail)'},
+       {name:'Какое изделие или заказ', auto:'yes', src:['c','g'],
+        text:'Модель или обозначение изделия, количество, номер заказа, счёта или УПД, накладной, партии.',
+        how:'из текста письма и вложений со сверкой по актуальному каталогу, заказам и отгрузкам'},
+       {name:'Что приложено', auto:'yes', src:['c'],
+        text:'Для претензии по договору: обстоятельства, расчёт, счёт-фактура или УПД, калькуляция затрат, фото. При повреждении в пути: акт с перевозчиком и отметка в накладной. Для заявки: номенклатура, количество, сроки.',
+        how:'проверка по списку договора; черновик запроса недостающего готовит LLM, человек одобряет отправку'},
+       {name:'Срочность и договорные обязательства', auto:'yes', src:['c'],
+        text:'Срочность письма задаёт договорный срок ответа: чем меньше осталось, тем срочнее. Есть ли действующий договор поставки и какие сроки он задаёт: решение по претензии за 10 рабочих дней, замена до 30 дней, представитель для акта за 5 дней, заявка считается принятой через 7 дней. Претензия принимается в гарантийный срок и не позднее 60 дней с выявления.',
+        how:'сверка с базой договоров и расчёт сроков от даты поступления с отметкой, когда срок подходит к концу'},
+       {name:'Первый приоритет', auto:'check', src:[],
+        text:'Из срочных обращений первыми идут те, где дело в безопасности людей: дефекты сидений, ремней и подушек безопасности. Они в приоритете по сути, а не только по сроку. Первый приоритет также у остановки конвейера завода и повторного дефекта.',
+        how:'система поднимает флаг по признакам в письме, приоритет подтверждает человек'},
+       {name:'Связь с прежними обращениями', auto:'yes', src:[],
+        text:'Продолжение переписки, повтор по той же партии или проблеме, одно письмо на несколько адресов.',
+        how:'объединение связанных писем в цепочки'},
+       {name:'Конфиденциальность', auto:'human', src:['s'],
+        text:'Чертежи и условия под соглашением о неразглашении, персональные данные из форм сайта.',
+        how:'система помечает такие письма, доступ определяет руководитель'},
+       {name:'Регион и язык', auto:'yes', src:['s'],
+        text:'Регион клиента для передачи в региональный отдел продаж: Екатеринбург, Москва и область, Краснодарский край, Беларусь. Язык письма у зарубежных партнёров.',
+        how:'из поля формы сайта, подписи и текста письма'}
+     ],
+     result:'обращению присвоен путь: заказ, претензия, информация, разработка или обратная связь',
+     resultFull:'Обращению присвоен путь: заказ, претензия, информация, разработка или обратная связь. Вместе с путём известны клиент и договор, изделие или заказ, полнота документов, договорный срок и срочность. Письма не от клиентов переданы по назначению.',
+     src:[],
+     assume:'Предполагаем, что каждое обращение читает и распределяет вручную тот, кто его получил.',
+     clarify:'Кто сегодня решает, куда идёт письмо, и по каким признакам. Сколько обращений приходит в день и какая их доля не от клиентов.'},
+    {id:'t3', lane:'trunk', num:'Шаг 3', title:'Регистрация и передача исполнителю', who:'получатель обращения',
+     why:'Закрепить за обращением ответственного и срок, ничего не потерять между отделами.',
+     text:'Получатель регистрирует обращение, назначает ответственного в отделе по пути и передаёт ему письмо со сроком ответа. Отделы: продажи, качество, конструкторы, логистика, бухгалтерия. Для претензий и заявок срок ответа задан договором.',
+     result:'обращение зарегистрировано, назначены исполнитель и срок ответа',
+     src:['c'],
+     assume:'Предположим, что обращения регистрируют вручную, а для обращений без договорного срока срок ответа задаёт внутреннее правило.',
+     clarify:'Где регистрируют: почта, таблица, учётная система. Кто следит за сроком.'},
+
+    {id:'s1-1a', lane:'s1', num:'1.1А', title:'Приём заявки по договору', who:'менеджер продаж',
+     why:'Заранее знать объёмы и сроки поставок и спланировать производство.',
+     text:'Менеджер принимает квартальную или месячную заявку завода и проверяет, подана ли она в срок. По договору квартальная заявка подаётся не позднее 15-го числа второго месяца квартала, месячная не позднее 5-го числа предыдущего месяца, по факсу или по электронной почте. Заявка считается принятой в течение 7 дней с момента направления.',
+     result:'заявка принята, объёмы и сроки поставки на период известны',
+     src:['c'],
+     clarify:'В каком виде приходят заявки заводов: таблица, письмо, портал заказчика. Кто переносит их в учётную систему.'},
+    {id:'s1-2a', lane:'s1', num:'1.2А', title:'Сверка с договором и спецификацией', who:'отдел продаж',
+     why:'Не взять в работу позиции, объёмы или сроки, о которых не договаривались.',
+     text:'Отдел продаж сверяет позиции, количество и сроки заявки с договором. Если завод меняет позиции, количество или сроки, по договору оформляется спецификация.',
+     result:'заявка сверена с договором, изменения оформлены спецификацией',
+     src:['c'],
+     assume:'Предположим, что каждую заявку вручную сверяют с договором и с планом производства.',
+     clarify:'Как часто заводы меняют заявку после подачи и кто это отслеживает.'},
+    {id:'s1-1b', lane:'s1', num:'1.1Б', title:'Уточнение модели и комплектации', who:'менеджер продаж', cycle:true,
+     why:'Изготовить и отправить именно то, что нужно клиенту: в заявке с сайта этих сведений нет.',
+     text:'Менеджер связывается с клиентом и выясняет модель, количество и адрес доставки. В формах сайта есть только имя, телефон, почта и регион, полей товара, количества и файла нет.',
+     result:'известны модель, количество и адрес доставки',
+     src:['s'],
+     assume:'Предположим, что менеджер уточняет модель, количество и адрес звонком или письмом.',
+     clarify:'Сколько единичных заказов в месяц и через какой канал они приходят.'},
+    {id:'s1-2b', lane:'s1', num:'1.2Б', title:'Счёт и оплата', who:'отдел продаж, бухгалтерия',
+     why:'Не начинать изготовление без оплаты и дать клиенту твёрдый срок.',
+     text:'Клиенту выставляют счёт, ждут оплату и после неё подтверждают срок изготовления.',
+     result:'счёт оплачен, клиенту подтверждён срок',
+     src:[],
+     assume:'Предположим, что единичные заказы идут по предоплате: счёт, оплата, затем подтверждение срока.',
+     clarify:'Работают ли по предоплате и кто подтверждает срок клиенту.'},
+    {id:'s1-3', lane:'s1', num:'1.3', title:'Планирование: склад или производство', who:'производство, склад',
+     why:'Отдать со склада то, что уже есть, недостающее изготовить к сроку.',
+     text:'Сначала проверяют склад готовой продукции. Если изделия нет или не хватает, заказ ставят в план производства.',
+     result:'заказ обеспечен со склада или поставлен в план производства',
+     src:[],
+     assume:'Предположим, что заказ сначала проверяют по складу готовой продукции и только потом ставят в план производства.',
+     clarify:'Как заказ попадает в план и кто видит очередь.'},
+    {id:'s1-4', lane:'s1', num:'1.4', title:'Изготовление и контроль выпуска', who:'производство, ОТК',
+     why:'Отправить клиенту только проверенное изделие с гарантией.',
+     text:'Производство изготавливает изделие, ОТК проверяет его перед выпуском. На изделие оформляется паспорт качества с гарантийным сроком.',
+     result:'изделие принято ОТК, паспорт качества оформлен',
+     src:['c','g'],
+     clarify:'Где хранится связь изделия с партией, сменой и комплектующими.'},
+    {id:'s1-5', lane:'s1', num:'1.5', title:'Отгрузка', who:'склад, логистика',
+     why:'Доставить продукцию в срок и с документами для приёмки.',
+     text:'Склад оформляет накладную и паспорт качества и передаёт продукцию перевозчику или клиенту на самовывоз. В отзывах перевозчики жалуются на ожидание погрузки с утра до вечера.',
+     result:'продукция отгружена вместе с документами',
+     src:['c','r'],
+     assume:'Предположим, что очередь на погрузку назначают вручную, без записи на время.',
+     clarify:'Как назначается очередь на погрузку и кто сообщает клиенту о готовности.'},
+
+    {id:'s2-1a', lane:'s2', num:'2.1А', title:'Уведомление о несоответствии от клиента', who:'инженер по качеству',
+     why:'Оценить, выполнены ли условия договора для такой претензии: срок уведомления и акт перевозчика.',
+     text:'Инженер принимает уведомление о некомплектности, недопоставке или несоответствии по качеству и проверяет условия договора. Уведомить нужно не позднее 5 календарных дней после обнаружения. Повреждения при перевозке рассматриваются только при акте, подписанном с перевозчиком, и отметке в транспортной накладной.',
+     result:'обращение зарегистрировано, известны вид и объём несоответствия',
+     src:['c'],
+     clarify:'Кто первым получает уведомление: менеджер или отдел качества.'},
+    {id:'s2-1b', lane:'s2', num:'2.2Б', title:'Проверка состава претензии', who:'инженер по качеству', star:true, cycle:true,
+     ai:'Претензию нужно сверить с условиями нескольких объёмных документов: договора, паспорта качества, переписки. Это работа с большим объёмом разрозненных неструктурированных данных, где сегодня обязательно участие человека. ИИ делает сверку и показывает, что не сходится, решение остаётся за инженером.',
+     why:'Разбор претензии на соответствие критериям гарантийного случая.',
+     text:'Инженер сверяет претензию со списком договора: обстоятельства, обоснованный расчёт, счета-фактуры или УПД, калькуляция затрат, фотоматериалы несоответствия. Претензия приходит по электронной почте, оригиналы документов заказным письмом с уведомлением.',
+     result:'претензия проверена на соответствие правилам договора, известно, чего не хватает',
+     src:['c'],
+     clarify:'Какая доля претензий приходит неполной.'},
+    {id:'s2-2b', lane:'s2', num:'2.1Б', title:'Проверка права на претензию', who:'инженер по качеству',
+     why:'Отсеять неправомерные претензии после гарантии или позже 60 дней и обосновать отказ.',
+     text:'Инженер находит дату отгрузки и гарантийный срок изделия по паспорту качества. По договору претензия предъявляется в течение гарантийного срока, но не позднее 60 дней с момента выявления несоответствия.',
+     result:'право на претензию подтверждено или есть основание для отказа',
+     src:['c'],
+     clarify:'Где смотрят дату отгрузки и гарантийный срок конкретного изделия.'},
+    {id:'s2-3', lane:'s2', num:'2.3', title:'Запрос недостающих документов', who:'инженер по качеству', heavy:true, star:true, cycle:true,
+     ai:'Циклическая работа: сверить присланное со списком необходимого и написать ответное письмо, и так несколько раз. Данные неструктурированные, процесс повторяется, а эталон для сверки есть: список договора, шаблоны, стандарты. ИИ сам находит недостающее и готовит письмо-запрос клиенту.',
+     why:'Собрать всё необходимое для решения. Без этого разбор стоит, а срок принятия решения заканчивается.',
+     text:'Инженер пишет клиенту, чего не хватает: фото, расчёта, документов или акта с перевозчиком. Полученное разбирает и проверяет на соответствие, пишет комментарии и снова запрашивает недостающее, пока комплект не станет полным. Пока ответа нет, разбор претензии стоит.',
+     result:'комплект документов по претензии полный',
+     src:['c'],
+     assume:'Предположим, что претензии часто приходят неполными и недостающее запрашивают отдельным письмом.',
+     clarify:'Сколько раз в среднем приходится переспрашивать.'},
+    {id:'s2-4', lane:'s2', num:'2.4В', title:'Источник дефектного изделия', who:'инженер по качеству, склад, ОТК', heavy:true,
+     why:'Найти, где и когда возник дефект, и какие ещё изделия могут содержать такой же дефект.',
+     text:'По паспорту качества и накладной из претензии инженер вместе со складом и ОТК поднимает историю изделия: заказ, отгрузку, партию, смену и комплектующие. Согласно руководству по качеству поставок каждая партия комплектующих идентифицирована и записана в журнале входного контроля.',
+     result:'известны заказ, отгрузка, партия, смена и комплектующие изделия',
+     src:['g'],
+     assume:'Предположим, что связь готового изделия с партией, сменой и комплектующими хранится в учётной системе и бумажных журналах, и её собирают вручную из нескольких мест.',
+     clarify:'Сколько мест хранения данных и есть ли бумажные журналы.'},
+    {id:'s2-5', lane:'s2', num:'2.5В', title:'Предотвратить распространение дефекта', who:'отдел качества, склад, логистика',
+     why:'Не дать дефектным изделиям уйти к другим клиентам, пока ищут причину.',
+     text:'Похожие изделия на складе, в пути и у клиента проверяют и при необходимости изолируют: помечают биркой «несоответствующая продукция» и убирают в зону изоляции. Такой порядок описан в руководстве по качеству поставок для комплектующих. Если акт дефект не подтвердит, изоляция снимается.',
+     result:'подозрительные изделия на складе и в пути изолированы до решения по акту',
+     src:['g'],
+     assume:'Предположим, что тот же порядок с бирками и изоляцией применяют к готовой продукции на складе и в пути.',
+     clarify:'Действует ли этот порядок для готовой продукции, а не только для комплектующих.'},
+    {id:'s2-6', lane:'s2', num:'2.6', title:'Комиссия или исследование', who:'инженер по качеству, представитель компании, клиент',
+     why:'Документально установить, есть ли дефект и чья это ответственность: продавца или покупателя.',
+     text:'По договору в течение 5 дней от уведомления компания направляет представителя для совместного акта ТОРГ-2 либо письменно просит отправить изделие на исследование. Акт осмотра с выводом о дефекте и ответственности составляется за 10 дней от поступления изделия. Для скрытых недостатков договор тоже предписывает составлять акт.',
+     result:'составлен акт ТОРГ-2 или акт осмотра с выводом о дефекте и ответственности: продавца или покупателя',
+     src:['c'],
+     clarify:'Кто ездит к клиенту и как часто изделие возвращают на исследование.'},
+    {id:'s2-7', lane:'s2', num:'2.9Д', title:'Причина и ответственный внутри компании', who:'отдел качества, технологи, производство',
+     why:'Найти корневую причину дефекта и ответственного внутри компании, чтобы устранить причину, а не последствие.',
+     text:'Отдел качества с технологами и производством разбирает изделие и данные о его источнике: заказ, партия, смена, комплектующие и их входной контроль. Определяют, где возник дефект: производство, комплектующие, перевозка или эксплуатация, и кто отвечает внутри компании. Если изделие было на исследовании у изготовителя, разбор начинается с акта осмотра. Если причина в комплектующих, претензия уходит их поставщику согласно руководству по качеству поставок: первый ответ за сутки, окончательный за 14 суток, отчёт 8D за 15 суток, неустойка 20 %.',
+     result:'корневая причина и ответственный внутри компании известны; при вине поставщика комплектующих ему выставлена претензия',
+     src:['g'],
+     assume:'Предположим, что внутри компании причину разбирают на совещании по образцу изделия с участием технологов и производства.',
+     clarify:'Есть ли внутренний порядок разбора причин и кто назначает ответственного.'},
+    {id:'s2-8', lane:'s2', num:'2.7Г', title:'Решение по претензии и ответ клиенту', who:'коммерческая служба, отдел качества', star:true,
+     ai:'ИИ готовит письмо клиенту по шаблону на основе собранной информации и собирает нужный комплект документов из базы компании и переписки. Перед отправкой письмо одобряет человек.',
+     why:'Принять решение по акту и уложиться в договорный срок: при просрочке клиент вправе сам устранить недостатки.',
+     text:'По акту коммерческая служба с отделом качества решают: признать претензию и чем её закрыть (замена, устранение или компенсация) либо отклонить с обоснованием. Решение сообщают клиенту в течение 10 рабочих дней с получения претензии. При отказе прикладывается акт с выводом об отсутствии ответственности продавца. Это первый ответ клиенту; итоговый отчёт с причиной и мерами уходит на шаге 2.11.',
+     result:'решение принято и сообщено клиенту в договорный срок',
+     src:['c'],
+     clarify:''},
+    {id:'s2-9', lane:'s2', num:'2.8Г', title:'Исполнение: замена или устранение', who:'производство, склад, снабжение',
+     why:'Дать клиенту годное изделие в договорный срок.',
+     text:'Отгружают замену или устраняют недостаток не позднее 30 дней с получения претензии, расходы несёт продавец.',
+     result:'замена отгружена или недостаток устранён',
+     src:['c'],
+     clarify:'Как оформляется отгрузка замены и кто оплачивает транспорт.'},
+    {id:'s2-10', lane:'s2', num:'2.10Д', title:'Меры, чтобы не повторилось, и запись', who:'отдел качества', heavy:true,
+     why:'Исключить повторение дефекта и провести анализ истории обращений на повторяемость проблемы.',
+     text:'Отдел качества фиксирует, что изменено в производстве или у поставщика, чтобы дефект не повторился. Случай записывается в журнал и в сводку по претензиям.',
+     result:'меры против повторения внедрены, случай записан',
+     src:['g'],
+     assume:'Предположим, что журнал претензий и сводку для руководства ведут вручную.',
+     clarify:'Есть ли сводка по претензиям и кто её читает.'},
+    {id:'s2-11', lane:'s2', num:'2.11', title:'Отчёт клиенту', who:'отдел качества, коммерческая служба', star:true,
+     ai:'Итоговый отчёт пишется по шаблону с соблюдением стандартов и правил компании, со ссылками на нужные документы и стандарты, плюс аргументированное сопроводительное письмо. ИИ собирает черновик отчёта и письма, ответственный проверяет и отправляет.',
+     why:'Закрыть претензию итоговым письмом: что сделано, какая причина найдена и какие меры приняты для предотвращения повторения.',
+     text:'После исполнения обязательств и внутреннего разбора клиенту отправляют итоговый отчёт: что произошло, чем закрыта претензия (замена или устранение), какая причина найдена и какие меры приняты, чтобы дефект не повторился. SIBECO требует такой отчёт по форме 8D от своих поставщиков; заводы, скорее всего, требуют его от SIBECO.',
+     result:'клиент получил итоговый отчёт, претензия закрыта',
+     src:[],
+     assume:'Предположим, что итоговый отчёт отправляют клиенту по каждой признанной претензии.',
+     clarify:'Требуют ли заводы отчёт по форме 8D и в какие сроки.'},
+
+    {id:'s3-1', lane:'s3', num:'3.1', title:'Что именно нужно', who:'получатель обращения',
+     why:'Определить, какой документ нужен и у кого его взять, без лишней переписки.',
+     text:'Получатель уточняет, что именно просит клиент: паспорт качества, сертификат, характеристики или чертёж, статус заказа и срок отгрузки, акт сверки. Паспорт качества и акт сверки упомянуты в договоре, сертификаты выложены на сайте.',
+     result:'понятно, какой документ или какие сведения нужны',
+     src:['c','s'],
+     clarify:'Какие запросы самые частые.'},
+    {id:'s3-2', lane:'s3', num:'3.2', title:'Найти или запросить у владельца сведений', who:'ответственный сотрудник',
+     why:'Получить документ у того, кто за него отвечает, и не отправить устаревший.',
+     text:'Сотрудник находит документ или запрашивает ответ в отделе, где он хранится: качество, конструкторы, продажи, производство или бухгалтерия.',
+     result:'документ или ответ получен от отдела, где он хранится',
+     src:[],
+     assume:'Предположим, что документы хранятся в разных отделах и за каждым нужно обращаться отдельно.',
+     clarify:'Где лежат сертификаты и паспорта: папка, учётная система, у одного человека.'},
+    {id:'s3-3', lane:'s3', num:'3.3', title:'Проверить, можно ли отдавать', who:'ответственный сотрудник, руководитель',
+     why:'Не передать закрытые сведения без соглашения о неразглашении.',
+     text:'Проверяют, можно ли передать чертежи и условия поставки и нет ли ограничений. Часть сведений передаётся только по соглашению о неразглашении, формы таких соглашений выложены на сайте.',
+     result:'передача разрешена или отказ обоснован',
+     src:['s'],
+     assume:'Предположим, что чертежи и условия поставки передают только по подписанному соглашению, а решение принимает руководитель.',
+     clarify:'Кто решает, что можно отправлять.'},
+    {id:'s3-4', lane:'s3', num:'3.4', title:'Ответ с вложениями', who:'ответственный сотрудник',
+     why:'Отправить клиенту всё нужное одним письмом.',
+     text:'Сотрудник отправляет клиенту документы или сведения одним письмом.',
+     result:'клиент получил документы или сведения',
+     src:[],
+     assume:'Предположим, что ответ с документами собирают и отправляют вручную.',
+     clarify:''},
+
+    {id:'s4-1', lane:'s4', num:'4.1', title:'Уточнение задачи', who:'отдел продаж, главный конструктор',
+     why:'Оценивать разработку по реальным требованиям клиента, а не по догадкам.',
+     text:'Отдел продаж с главным конструктором выясняет у клиента технику, посадочные места, требования, объём и срок. На сайте заявлена разработка изделий под заказчика, есть отдел главного конструктора.',
+     result:'требования, объём и срок зафиксированы',
+     src:['s'],
+     assume:'Предположим, что запрос сначала уточняют отдел продаж и главный конструктор: требования, объём и срок.',
+     clarify:'Сколько таких запросов в год и кто их ведёт.'},
+    {id:'s4-2', lane:'s4', num:'4.2', title:'Оценка: можно ли, когда, почём', who:'конструкторы, производство, коммерческая служба',
+     why:'Браться только за то, что компания может сделать в срок и с выгодой.',
+     text:'Конструкторы, производство и коммерческая служба оценивают возможность, сроки и цену и решают, браться ли за разработку.',
+     result:'принято решение браться или отказать, есть оценка сроков и цены',
+     src:[],
+     assume:'Предположим, что возможность, сроки и цену оценивают конструкторы, производство и коммерческая служба вместе.',
+     clarify:'Кто принимает решение о новом изделии.'},
+    {id:'s4-3', lane:'s4', num:'4.3', title:'Предложение и образец', who:'отдел продаж, конструкторы',
+     why:'Показать клиенту изделие и условия до заказа, избежать переделок.',
+     text:'Клиенту отправляют коммерческое предложение. При необходимости изготавливают образец и согласовывают его с клиентом.',
+     result:'клиент получил предложение, образец согласован',
+     src:[],
+     assume:'Предположим, что перед заказом клиенту делают и согласуют образец.',
+     clarify:'Делаются ли образцы и за чей счёт.'},
+    {id:'s4-4', lane:'s4', num:'4.4', title:'Переход в сценарий 1', tech:true, who:'', jump:true,
+     why:'Согласованная разработка дальше идёт обычным заказом, отдельный процесс не нужен.',
+     text:'Разработка заканчивается предложением. Если клиент согласен, дальше это обычный заказ по ветви 1: заявка, изготовление, отгрузка.',
+     src:[],
+     assume:'Предположим, что после согласования новое изделие заказывают обычным порядком.',
+     clarify:''},
+
+    {id:'s5-1', lane:'s5', num:'5.1', title:'Понять суть', who:'получатель обращения',
+     why:'Отличить жалобу, которую нужно разбирать, от вопроса или благодарности.',
+     text:'Получатель разбирается, на что жалуется или за что благодарит клиент: сроки, погрузка, документы, общение. Это обращения без договорного требования. В отзывах встречаются жалобы на ожидание погрузки и на срок единичного заказа.',
+     result:'понятно, на что жалуется или за что благодарит клиент',
+     src:['r'],
+     assume:'Предположим, что такие жалобы приходят не только в отзывах, но и письмом или по телефону.',
+     clarify:'Приходят ли такие обращения письмом или только звонком и в отзывах.'},
+    {id:'s5-2', lane:'s5', num:'5.2', title:'Разобраться, что было', who:'руководитель направления',
+     why:'Найти причину недовольства внутри компании, а не только ответить клиенту.',
+     text:'Руководитель выясняет у своих сотрудников, что произошло, кто участвовал и есть ли правило на такой случай.',
+     result:'обстоятельства и причина выяснены',
+     src:[],
+     assume:'Предположим, что обстоятельства выясняет руководитель того направления, к которому относится жалоба.',
+     clarify:'Кто отвечает за такие обращения.'},
+    {id:'s5-3', lane:'s5', num:'5.3', title:'Ответ и принятые меры', who:'руководитель направления, ответственный сотрудник',
+     why:'Выполнить обещание компании о моментальной обратной связи и не повторить ошибку с другими клиентами.',
+     text:'Клиенту отвечают и, если нужно, сообщают о принятых мерах. При необходимости меняют внутреннее правило.',
+     result:'клиент получил ответ, при необходимости правило изменено',
+     src:[],
+     assume:'Предположим, что клиенту сообщают о принятых мерах, а при необходимости меняют внутреннее правило.',
+     clarify:''},
+
+    {id:'e2', lane:'tail', num:'Шаг 4', title:'Закрытие и запись', who:'ответственный сотрудник',
+     why:'Не собирать историю заново при следующем обращении клиента или по этому изделию.',
+     text:'Итог обращения записывается так, чтобы при следующем обращении этого клиента или по этому изделию историю можно было найти. После этого обращение закрывается.',
+     result:'обращение закрыто, история сохранена',
+     src:[],
+     assume:'Предположим, что единого места для истории обращений нет.',
+     clarify:'Где сегодня хранится история обращений.'}
+  ];
+
+  /* flow: a fork lists alternative paths; they are stacked in one column and joined by bypass arrows */
+  const FLOW = {
+    trunk:['t1','t2','t3'],
+    s1:[{fork:[{label:'Серийная заявка завода', steps:['s1-1a','s1-2a']},{label:'Единичный заказ: сайт или телефон', steps:['s1-1b','s1-2b']}]}, 's1-3','s1-4','s1-5'],
+    s2:[{fork:[{label:'Брак или недостача при приёмке', steps:['s2-1a']},{label:'Дефект в гарантийный срок', steps:['s2-2b','s2-1b']}]}, 's2-3', {parallel:true, fork:[{label:'Внутри компании: остановить распространение дефекта', steps:['s2-4','s2-5']},{steps:[]}]}, 's2-6', {parallel:true, fork:[{label:'С клиентом: решение и исполнение', steps:['s2-8','s2-9'], color:'p2'},{label:'Внутри компании: причины и меры', steps:['s2-7','s2-10'], color:'p1'}]}, 's2-11'],
+    s3:['s3-1','s3-2','s3-3','s3-4'],
+    s4:['s4-1','s4-2','s4-3','s4-4'],
+    s5:['s5-1','s5-2','s5-3'],
+    tail:['e2']
+  };
+  const BRANCHES = ['s1','s2','s3','s4','s5'];
+  const LETTERS = ['А','Б','В','Г','Д','Е','Ж'];
+
+  const byId = {}; STEPS.forEach(s => byId[s.id] = s);
+  const isAssumed = s => s.src.length === 0;
+  const isHuman = s => !s.tech;
+  const whoLabel = s => s.whoLabel || 'Исполнитель';
+  const lowerFirst = t => t.charAt(0).toLowerCase() + t.slice(1);
+  const upperFirst = t => t.charAt(0).toUpperCase() + t.slice(1);
+  const laneColor = lane => (lane === 'trunk' || lane === 'tail') ? 'trunk' : lane;
+  const $ = id => document.getElementById(id);
+
+  /* render */
+  const edges = [], order = [];
+  function cardHTML(id){
+    const s = byId[id]; order.push(id);
+    const cls = ['step', isAssumed(s) ? 'assume' : 'known'];
+    if (s.jump) cls.push('jump');
+    const icons = (isAssumed(s) ? icQ(true) : '') + (isHuman(s) ? icP(true) : '') + (s.heavy ? icH(true) : '') + (s.cycle ? icC(true) : '') + (s.star ? (s.ai ? icSHit : icS(true)) : '');
+    return `<button class="${cls.join(' ')}" id="n-${id}" data-id="${id}" type="button" aria-haspopup="dialog">
+      <span class="head"><span class="num">${s.num}</span><span class="icons">${icons}</span></span>
+      <span class="ttl">${s.title}</span>
+      ${s.who ? `<span class="meta"><b>${whoLabel(s)}:</b> ${s.who}</span>` : ''}
+      <span class="why"><b>Зачем:</b> ${lowerFirst(s.why)}</span>
+      ${s.cardCrit ? `<span class="why"><b>Критерии сортировки:</b> ${s.cardCrit}</span>` : ''}
+      ${s.result ? `<span class="meta"><b>Результат:</b> ${s.result}</span>` : ''}
+      ${s.jump ? '<span class="jumpto">Дальше по ветви 1</span>' : ''}
+      ${s.src.length ? `<span class="badges">${s.src.map(badge).join('')}</span>` : ''}
+    </button>`;
+  }
+  const link = (p, to, branch, mode, color) => edges.push({from:p.id, to, mode:mode || p.mode, branch:p.branch || branch, cross:!!p.cross, color:color || p.color || ''});
+  function renderSeq(seq, branch, entry){
+    let html = '', prev = entry, forkIdx = 0, letterIdx = 0;
+    seq.forEach(item => {
+      if (typeof item === 'string'){
+        prev.forEach(p => link(p, 'n-' + item, branch));
+        html += cardHTML(item);
+        prev = [{id:'n-' + item, mode:'straight'}];
+        return;
+      }
+      const src = prev, ends = [];
+      const shown = item.fork.map(p => !!(p.label || p.steps.length));
+      const lastShown = shown.lastIndexOf(true);
+      item.fork.forEach((path, k) => {
+        const pc = path.color || 'p' + (k + 1);
+        if (!shown[k]) {
+          /* a line without steps or label: a direct arrow from the fork to the common step */
+          src.forEach(p => ends.push({id:p.id, mode:'bypassR', color:path.color || ''}));
+          return;
+        }
+        const lid = `l-${branch}-${forkIdx}-${k}`;
+        const letter = LETTERS[letterIdx++];
+        src.forEach(p => link(p, lid, branch, k === 0 ? null : 'bypassR', pc));
+        html += `<div class="pathlabel ${pc}" id="${lid}"><span class="pl">${letter}</span>${path.label}</div>`;
+        let sp = {id:lid, mode:'straight', color:pc};
+        path.steps.forEach(sid => { link(sp, 'n-' + sid, branch); html += cardHTML(sid); sp = {id:'n-' + sid, mode:'straight', color:pc}; });
+        ends.push({id:sp.id, mode:k === lastShown ? 'straight' : 'bypassL', color:pc});
+      });
+      prev = ends; forkIdx++;
+    });
+    return {html, last:prev};
+  }
+
+  const trunkR = renderSeq(FLOW.trunk, 'trunk', []);
+  $('trunk').innerHTML = trunkR.html;
+  const trunkLast = trunkR.last[0].id;
+  const tailEntry = [];
+  $('branches').innerHTML = BRANCHES.map(key => {
+    const sc = SCEN[key], hid = 'h-' + key;
+    edges.push({from:trunkLast, to:hid, mode:'fan', branch:key, cross:true});
+    const r = renderSeq(FLOW[key], key, [{id:hid, mode:'straight'}]);
+    r.last.forEach(p => { const sid = p.id.slice(2); if (byId[sid] && byId[sid].jump) return; tailEntry.push({id:p.id, mode:'join', cross:true, branch:key, color:p.color}); });
+    return `<div class="branch" data-branch="${key}" style="--c:var(--${key});--c-soft:var(--${key}-soft)">
+      <div class="bhead" id="${hid}"><div class="row"><span class="pill">${sc.n}</span><h2>${sc.name}</h2></div><div class="range">${sc.range}</div></div>
+      ${r.html}
+    </div>`;
+  }).join('');
+  $('tail').innerHTML = renderSeq(FLOW.tail, 'tail', tailEntry).html;
+  /* a step whose outgoing arrows share one colour takes that colour on its border */
+  const outColors = {};
+  edges.forEach(e => { (outColors[e.from] = outColors[e.from] || new Set()).add(e.color || ''); });
+  Object.keys(outColors).forEach(id => { const set = outColors[id]; const el = $(id); if (set.size === 1 && [...set][0] && el && el.classList.contains('step')) el.classList.add([...set][0]); });
+
+  $('sources').innerHTML = '<span class="lab">Источник информации</span>' + ['c','g','s','r','a'].map(badge).join('');
+  $('legend').innerHTML = `
+    <span class="item"><span class="sample"></span>Шаг есть в документах компании</span>
+    <span class="item">${icQ(false)}Шаг предположен, нужно уточнить</span>
+    <span class="item">${icP(false)}Шаг выполняет человек</span>
+    <span class="item">${icH(false)}Трудоёмкий шаг</span>
+    <span class="item">${icC(false)}Циклическая работа внутри шага</span>
+    <span class="item">${icS(false)}Кандидат на автоматизацию: почему — по нажатию на звёздочку</span>`;
+
+  /* legend toggle */
+  const legendBtn = $('legendBtn'), legend = $('legend');
+  legendBtn.addEventListener('click', () => {
+    const open = legendBtn.getAttribute('aria-expanded') !== 'true';
+    legendBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    legend.hidden = !open;
+  });
+
+  /* wires */
+  const map = $('map'), svg = $('wires');
+  const mq = window.matchMedia('(max-width:1120px)');
+  const MK = (id, cls) => `<marker id="${id}" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto"><path class="arrow${cls}" d="M0 0L10 5L0 10z"/></marker>`;
+  const DEFS = '<defs>' + MK('arr', '') + MK('arr-p1', ' p1') + MK('arr-p2', ' p2') + '</defs>';
+  const LANE = 13;
+  let filter = 'all';
+  const rd = v => Math.round(v * 2) / 2;
+  function vroute(x1, y1, x2, y2, midY){
+    if (Math.abs(x1 - x2) < 1.5) return `M${rd(x1)} ${rd(y1)}V${rd(y2)}`;
+    const dir = x2 > x1 ? 1 : -1;
+    const r = Math.max(0, Math.min(12, Math.abs(x2 - x1) / 2, midY - y1, y2 - midY));
+    return `M${rd(x1)} ${rd(y1)}V${rd(midY - r)}Q${rd(x1)} ${rd(midY)} ${rd(x1 + dir * r)} ${rd(midY)}H${rd(x2 - dir * r)}Q${rd(x2)} ${rd(midY)} ${rd(x2)} ${rd(midY + r)}V${rd(y2)}`;
+  }
+  function sideroute(x1, y1, lx, x2, y2){
+    const dir = lx > x1 ? 1 : -1;
+    const r = Math.max(0, Math.min(10, Math.abs(lx - x1), Math.abs(lx - x2), (y2 - y1) / 2));
+    return `M${rd(x1)} ${rd(y1)}H${rd(lx - dir * r)}Q${rd(lx)} ${rd(y1)} ${rd(lx)} ${rd(y1 + r)}V${rd(y2 - r)}Q${rd(lx)} ${rd(y2)} ${rd(lx - dir * r)} ${rd(y2)}H${rd(x2)}`;
+  }
+  function draw(){
+    const mr = map.getBoundingClientRect();
+    const rel = el => { const r = el.getBoundingClientRect(); return {l:r.left - mr.left, r:r.right - mr.left, t:r.top - mr.top, b:r.bottom - mr.top, w:r.width, h:r.height}; };
+    const W = map.clientWidth, H = map.scrollHeight, stacked = mq.matches;
+    svg.setAttribute('width', W); svg.setAttribute('height', H); svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+    const out = [];
+    edges.forEach(e => {
+      if (stacked && e.cross) return;
+      const a = $(e.from), b = $(e.to);
+      if (!a || !b) return;
+      const A = rel(a), B = rel(b);
+      let d;
+      if (e.mode === 'bypassR' || e.mode === 'bypassL'){
+        const right = e.mode === 'bypassR';
+        const y1 = A.b - Math.min(20, A.h / 2);
+        const y2 = b.classList.contains('pathlabel') ? B.t + B.h / 2 : B.t + Math.min(24, B.h / 2);
+        if (y2 <= y1) return;
+        const lx = right ? Math.max(A.r, B.r) + LANE : Math.min(A.l, B.l) - LANE;
+        d = sideroute(right ? A.r : A.l, y1, lx, right ? B.r : B.l, y2);
+      } else {
+        const x1 = A.l + A.w / 2, y1 = A.b, x2 = B.l + B.w / 2, y2 = B.t;
+        const gap = y2 - y1; if (gap <= 2) return;
+        let midY;
+        if (e.mode === 'fan') midY = y1 + Math.min(gap / 2, 30);
+        else if (e.mode === 'join') midY = y2 - Math.min(gap / 2, 30);
+        else midY = y1 + gap / 2;
+        d = vroute(x1, y1, x2, y2, midY);
+      }
+      const dim = filter !== 'all' && e.branch !== 'trunk' && e.branch !== 'tail' && e.branch !== filter;
+      out.push(`<path class="wire${e.color ? ' ' + e.color : ''}${dim ? ' dim' : ''}" d="${d}" marker-end="url(#arr${e.color ? '-' + e.color : ''})"/>`);
+    });
+    svg.innerHTML = DEFS + out.join('');
+  }
+  let raf = 0;
+  const schedule = () => { cancelAnimationFrame(raf); raf = requestAnimationFrame(draw); };
+  if ('ResizeObserver' in window){
+    const ro = new ResizeObserver(schedule);
+    ro.observe(map);
+    map.querySelectorAll('.step,.bhead,.pathlabel').forEach(el => ro.observe(el));
+  }
+  window.addEventListener('resize', schedule);
+  window.addEventListener('load', schedule);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(schedule);
+  if (mq.addEventListener) mq.addEventListener('change', schedule); else if (mq.addListener) mq.addListener(schedule);
+  schedule();
+
+  /* filter */
+  const controls = $('controls');
+  controls.addEventListener('click', e => {
+    const chip = e.target.closest('.chip'); if (!chip) return;
+    controls.querySelectorAll('.chip').forEach(c => c.setAttribute('aria-pressed', c === chip ? 'true' : 'false'));
+    filter = chip.dataset.s;
+    document.querySelectorAll('.branch').forEach(b => b.classList.toggle('dim', filter !== 'all' && b.dataset.branch !== filter));
+    schedule();
+  });
+  /* the claim branch is selected by default */
+  controls.querySelector('.chip[data-s="s2"]').click();
+
+  /* icon hints */
+  const tip = $('tip');
+  const pop = $('pop');
+  let popFor = null;
+  let tipFor = null;
+  function showTip(el){
+    tip.textContent = el.dataset.tip; tip.hidden = false;
+    const r = el.getBoundingClientRect(), t = tip.getBoundingClientRect();
+    const x = Math.max(8, Math.min(window.innerWidth - t.width - 8, r.left + r.width / 2 - t.width / 2));
+    let y = r.top - t.height - 8; if (y < 8) y = r.bottom + 8;
+    tip.style.left = x + 'px'; tip.style.top = y + 'px';
+  }
+  const hideTip = () => { tipFor = null; tip.hidden = true; };
+  function onPointer(e){
+    const ic = e.target && e.target.closest ? e.target.closest('[data-tip]') : null;
+    if (ic && popFor === ic && !pop.hidden) return;
+    if (ic) { if (ic !== tipFor || tip.hidden) { tipFor = ic; showTip(ic); } }
+    else if (tipFor) hideTip();
+  }
+  document.addEventListener('mouseover', onPointer);
+  document.addEventListener('mousemove', onPointer);
+  window.addEventListener('scroll', () => { if (tipFor) hideTip(); }, {passive:true});
+  $('drawer').addEventListener('scroll', () => { if (tipFor) hideTip(); }, {passive:true});
+
+  /* theme */
+  const THEME_KEY = 'map-theme';
+  const themeSeg = $('theme');
+  function applyTheme(t, store){
+    if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t);
+    else document.documentElement.removeAttribute('data-theme');
+    themeSeg.querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', b.dataset.t === t ? 'true' : 'false'));
+    if (store) { try { localStorage.setItem(THEME_KEY, t); } catch(e){} }
+  }
+  let savedTheme = null;
+  try { savedTheme = localStorage.getItem(THEME_KEY); } catch(e){}
+  if (savedTheme) applyTheme(savedTheme, false);
+  themeSeg.addEventListener('click', e => { const b = e.target.closest('button'); if (b) applyTheme(b.dataset.t, true); });
+
+  /* drawer */
+  const drawer = $('drawer'), scrim = $('scrim');
+  let current = null, lastFocus = null;
+  function critHTML(c){
+    const marks = c.src.length ? c.src.map(badge).join('') : icQc;
+    return `<li>
+      <div class="ch"><span class="cn">${c.name}</span><span class="auto ${c.auto}">${AUTO[c.auto]}</span></div>
+      <div class="cd">${c.text}</div>
+      <div class="how"><b>Как:</b> ${c.how}</div>
+      <div class="cs">${marks}</div>
+    </li>`;
+  }
+  function openStep(id){
+    const s = byId[id]; if (!s) return;
+    current = id; hideTip();
+    const col = laneColor(s.lane), sc = SCEN[s.lane];
+    drawer.style.setProperty('--c', `var(--${col})`);
+    drawer.style.setProperty('--c-soft', `var(--${col}-soft)`);
+    $('dScen').textContent = sc.n ? `Сценарий ${sc.n} · ${sc.name}` : sc.name;
+    $('dTitle').textContent = `${s.num}. ${s.title}`;
+    $('dStatus').innerHTML = (isAssumed(s)
+        ? `<div>${icQ(false)}<span>Шаг предположен: в документах компании его нет</span></div>`
+        : `<div><span class="sample"></span><span>Шаг есть в документах компании</span></div>`)
+      + (isHuman(s) ? `<div>${icP(false)}<span>Шаг выполняет человек</span></div>` : '')
+      + (s.heavy ? `<div>${icH(false)}<span>Трудоёмкий шаг</span></div>` : '')
+      + (s.cycle ? `<div>${icC(false)}<span>Циклическая работа внутри шага</span></div>` : '')
+      + (s.star ? `<div>${icS(false)}<span>Кандидат на автоматизацию</span></div>` : '');
+    $('dWhoWrap').hidden = !s.who;
+    $('dWhoLab').textContent = whoLabel(s);
+    $('dWho').textContent = s.who ? upperFirst(s.who) : '';
+    $('dWhy').textContent = s.why;
+    $('dText').textContent = s.text;
+    $('dList').hidden = !s.list;
+    $('dList').innerHTML = s.list ? s.list.map(x => `<li>${x}</li>`).join('') : '';
+    $('dExtra').hidden = !s.criteria;
+    $('dCritWrap').hidden = !s.criteria;
+    $('dCritIntro').textContent = s.critIntro || '';
+    $('dCrit').innerHTML = s.criteria ? s.criteria.map(critHTML).join('') : '';
+    $('dResWrap').hidden = !s.result;
+    $('dRes').textContent = s.resultFull || (s.result ? upperFirst(s.result) + '.' : '');
+    $('dAiWrap').hidden = !s.ai;
+    $('dAi').textContent = s.ai || '';
+    $('dSrcWrap').hidden = !s.src.length;
+    $('dSrc').innerHTML = s.src.map(k => `<div>${badge(k)}<span>${SRC[k].text}</span></div>`).join('');
+    $('dAssumeWrap').hidden = !s.assume;
+    $('dAssume').textContent = s.assume || '';
+    $('dClarifyWrap').hidden = !s.clarify;
+    $('dClarify').textContent = s.clarify || '';
+    const idx = order.indexOf(id);
+    $('dPrev').disabled = idx <= 0; $('dNext').disabled = idx >= order.length - 1;
+    document.querySelectorAll('.step.is-open').forEach(el => el.classList.remove('is-open'));
+    const card = $('n-' + id); if (card) card.classList.add('is-open');
+    drawer.scrollTop = 0;
+    drawer.classList.add('open'); scrim.classList.add('on'); drawer.setAttribute('aria-hidden', 'false');
+  }
+  function closeDrawer(){
+    drawer.classList.remove('open'); scrim.classList.remove('on'); drawer.setAttribute('aria-hidden', 'true');
+    document.querySelectorAll('.step.is-open').forEach(el => el.classList.remove('is-open'));
+    current = null; hideTip(); hidePop();
+    if (lastFocus) { lastFocus.focus(); lastFocus = null; }
+  }
+  /* why AI helps here: a popover on the star */
+  function showPop(ic, s){
+    hideTip(); popFor = ic;
+    $('popTitle').innerHTML = `${icS(false)}<span>${s.num} · почему здесь поможет ИИ</span>`;
+    $('popText').textContent = s.ai;
+    pop.hidden = false; placePop();
+  }
+  function placePop(){
+    if (pop.hidden || !popFor) return;
+    const r = popFor.getBoundingClientRect(), p = pop.getBoundingClientRect();
+    if (r.bottom < 0 || r.top > window.innerHeight) { hidePop(); return; }
+    const x = Math.max(8, Math.min(window.innerWidth - p.width - 8, r.left + r.width / 2 - p.width / 2));
+    let y = r.bottom + 8; if (y + p.height > window.innerHeight - 8) y = Math.max(8, r.top - p.height - 8);
+    pop.style.left = x + 'px'; pop.style.top = y + 'px';
+  }
+  const hidePop = () => { popFor = null; pop.hidden = true; };
+  map.addEventListener('click', e => {
+    const star = e.target.closest('.ic.hit');
+    if (star) { const card = star.closest('.step'); const s = byId[card.dataset.id]; if (popFor === star && !pop.hidden) hidePop(); else showPop(star, s); return; }
+    const card = e.target.closest('.step'); if (!card) return; hidePop(); lastFocus = card; openStep(card.dataset.id);
+  });
+  $('popClose').addEventListener('click', hidePop);
+  document.addEventListener('click', e => { if (!pop.hidden && !pop.contains(e.target) && !e.target.closest('.ic.hit')) hidePop(); });
+  window.addEventListener('scroll', placePop, {passive:true});
+  window.addEventListener('resize', placePop);
+  $('dClose').addEventListener('click', closeDrawer);
+  scrim.addEventListener('click', closeDrawer);
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') { if (!pop.hidden) hidePop(); else if (current) closeDrawer(); } });
+  $('dPrev').addEventListener('click', () => { const i = order.indexOf(current); if (i > 0) openStep(order[i - 1]); });
+  $('dNext').addEventListener('click', () => { const i = order.indexOf(current); if (i < order.length - 1) openStep(order[i + 1]); });
+
+  const h = (location.hash || '').slice(1);
+  if (h && byId[h]) openStep(h);
+})();
+</script>
+</body>
+</html>
