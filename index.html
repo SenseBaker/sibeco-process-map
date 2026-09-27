@@ -214,6 +214,8 @@ button{font:inherit; color:inherit}
 .step .jumpto{font-family:var(--font-display); font-weight:700; font-size:12px; color:var(--s1)}
 
 .foot{color:var(--muted); font-size:12.5px; max-width:80ch; margin:18px auto 0; text-align:center}
+.nojs{max-width:64ch; margin:20px auto 0; padding:14px 16px; border:1.5px solid var(--line-strong); border-radius:10px; background:var(--surface); font-size:15px; line-height:1.5}
+.nojs a{color:var(--s2); font-weight:600}
 
 /* drawer */
 .scrim{position:fixed; inset:0; background:rgba(10,14,12,.35); opacity:0; pointer-events:none; transition:opacity .2s ease; z-index:19}
@@ -289,6 +291,7 @@ button{font:inherit; color:inherit}
     </div>
   </header>
 
+  <noscript><div class="nojs">Карта строится в браузере, а здесь скрипты отключены: так бывает в предпросмотре вложений почты. Откройте файл в Safari, Chrome или другом браузере либо перейдите по ссылке: <a href="https://sensebaker.github.io/sibeco-process-map/">sensebaker.github.io/sibeco-process-map</a></div></noscript>
   <div class="bar">
     <div class="controls" id="controls">
       <button class="legend-btn" id="legendBtn" type="button" aria-expanded="true" aria-controls="legend">Обозначения <span class="chev" aria-hidden="true">▾</span></button>
